@@ -23,7 +23,8 @@ Whether you're just getting started with Kubernetes or want to strengthen your i
 - Use `kubectl` to interact with the cluster.
   
 This part simulates a mini on-premise cluster environment. 💻
-
+<!-- add image from assest -->
+![K3s Cluster](assests/p1_assest_image.png)
 ---
 
 ## 🌐 Part 2 – K3s & Three Applications: Learning Ingress & Replication
