@@ -1,0 +1,57 @@
+VM_BOX_NAME = "generic/alpine318"
+VM_MEMORY = 512 
+VM_CPUS = 1
+VM_PROVIDER = "virtualbox"
+
+# Hostnames for the machines
+SERVER_NAME = "aerrazikS"
+AGENT_NAME = "aerrazikSW"
+
+# Static IP addresses for the private network
+SERVER_IP = "192.168.56.110"
+AGENT_IP = "192.168.56.111"
+
+# Shared folder for data exchange between VMs
+SYNCED_FOLDER = "shared"
+K3S_TOKEN_PATH = "/var/lib/rancher/k3s/server/node-token"
+
+# Vagrantfile configuration
+Vagrant.configure("2") do |config|
+  config.vm.box = VM_BOX_NAME
+  config.vm.synced_folder SYNCED_FOLDER, "/#{SYNCED_FOLDER}", create: true
+  
+  config.vm.provider VM_PROVIDER do |vb|
+    vb.memory = VM_MEMORY
+    vb.cpus = VM_CPUS
+  end
+  
+  # Server VM configuration (K3s Controller)
+  config.vm.define SERVER_NAME do |server|
+    server.vm.hostname = SERVER_NAME
+    server.vm.network "private_network", ip: SERVER_IP
+    server.vm.provider VM_PROVIDER do |vb|
+      vb.name = SERVER_NAME
+    end
+    server.vm.provision "shell", inline: <<-SHELL
+      echo "[$(hostname)] Installing K3S on server."
+      curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644 --node-ip #{SERVER_IP}
+      while [ ! -f #{K3S_TOKEN_PATH} ]; do sleep 1; done
+      sudo cp #{K3S_TOKEN_PATH} /#{SYNCED_FOLDER}
+      echo "[$(hostname)] Configured successfully"
+    SHELL
+  end
+  
+  # Agent VM configuration (K3s Worker)
+  config.vm.define AGENT_NAME do |agent|
+    agent.vm.hostname = AGENT_NAME
+    agent.vm.network "private_network", ip: AGENT_IP
+    agent.vm.provider VM_PROVIDER do |vb|
+      vb.name = AGENT_NAME
+    end
+    agent.vm.provision "shell", inline: <<-SHELL
+      echo "[$(hostname)] Installing K3S on agent."
+      curl -sfL https://get.k3s.io | sh -s - agent --node-ip #{AGENT_IP} --server "https://#{SERVER_IP}:6443" --token-file /#{SYNCED_FOLDER}/node-token
+      echo "[$(hostname)] Configured successfully"
+    SHELL
+  end
+end
