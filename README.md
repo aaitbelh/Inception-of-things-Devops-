@@ -53,6 +53,7 @@ This part is your intro to **application routing and scaling** in Kubernetes. �
 
 Make a code change ➜ push to GitHub ➜ Argo CD syncs and deploys it 🚀
 
+![K3D ArgoCD](assests/p3_assest_image.png)
 ---
 
 ## ⭐ Bonus – GitLab Integration
@@ -64,7 +65,6 @@ Make a code change ➜ push to GitHub ➜ Argo CD syncs and deploys it 🚀
 - Create a new namespace `gitlab`, and ensure your full CI/CD pipeline works with GitLab as the Git source.
 
 This bonus takes it to the next level: **local DevOps with GitLab**. 💼
-
 ---
 
 ## 🛠 Technologies Used
