@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wil-application
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/root/aaitbelh.git
+    targetRevision: HEAD
+    path: ./
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    - Prune=true
+# argocd repo add http://gitlab-webservice-default.gitlab.svc.cluster.local:8082/gitlab/root/aaitbelh.git/ --insecure-skip-server-verification
+# argocd app create will --repo 'http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/gitlab/root/aaitbelh.git/' --path 'dev' --dest-namespace 'dev' --dest-server 'https://kubernetes.default.svc' --grpc-web
