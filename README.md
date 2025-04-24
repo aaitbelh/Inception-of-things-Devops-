@@ -53,7 +53,7 @@ This part is your intro to **application routing and scaling** in Kubernetes. �
 
 Make a code change ➜ push to GitHub ➜ Argo CD syncs and deploys it 🚀
 
-![K3D ArgoCD](assests/p3_assrst_image.png)
+![K3D ArgoCD](assests/p3_assest_image.png)
 ---
 
 ## ⭐ Bonus – GitLab Integration
